@@ -10,8 +10,8 @@ class CSVDatabase(object):
 
     def __init__(
         self, 
-        csv_filename=constants.DEFAUT_FACES_CSV_NAME, 
         face_dir=constants.DEFAULT_FACE_DIR
+        csv_filename=constants.DEFAUT_FACES_CSV_NAME, 
     ):
         # set filenames
         self._csv_filename = csv_filename
