@@ -4,7 +4,7 @@ import constants
 
 class Face(object):
     def __init__(self, filename="", features=[]):
-        if filename != ""
+        if filename != "":
             self._filename = filename
             self._features = []
             

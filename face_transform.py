@@ -1,6 +1,8 @@
 import numpy as np
 import scipy.interpolate as interpolate
 
+import constants
+
 class FaceTransformation(object):
     def __init__(self, face_mat):    
         # calculate the mean and subtract from matrix

@@ -7,10 +7,11 @@ class CSVParser(object):
     def read_file():
         ret = ""
         with open(self._filename, "r") as f:
-            buf = f.read()
-            if buf is None:
-                break
-            ret += buf
+            while True:
+                buf = f.read()
+                if buf is None:
+                    break
+                ret += buf
         return ret
         
     def write_file(content):

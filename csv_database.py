@@ -10,8 +10,8 @@ class CSVDatabase(object):
 
     def __init__(
         self, 
-        face_dir=constants.DEFAULT_FACE_DIR
-        csv_filename=constants.DEFAUT_FACES_CSV_NAME, 
+        face_dir=constants.DEFAULT_FACE_DIR,
+        csv_filename=constants.DEFAULT_FACES_CSV_NAME, 
     ):
         # set filenames
         self._csv_filename = csv_filename
@@ -37,7 +37,7 @@ class CSVDatabase(object):
         self._parser.write_csv(self._data) 
         
     def __repr__(self):
-        return '\n'.join(list(self._data[:CSVDatabase.DISPLAY_ITEMS])))
+        return '\n'.join(list(self._data[:CSVDatabase.DISPLAY_ITEMS]))
       
     def get_face_mat(self):
         return np.mat([face.features for face in self._data])

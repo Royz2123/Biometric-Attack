@@ -1,3 +1,4 @@
+import constants
 import csv_database
 
 class Attacker(object):
@@ -5,7 +6,7 @@ class Attacker(object):
         self, 
         face_database, 
         matches_filename=constants.DEFAULT_MATCHES_CSV_NAME, 
-        attacks=constants.DEFAULT_ATTACKS
+        attacks=constants.DEFAULT_ATTACK_SIZE
     ):
         self._face_database = database
         self._matches_database = csv_database.CSVDatabase(matches_filename)

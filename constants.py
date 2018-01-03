@@ -1,5 +1,5 @@
 
-HELP_ARGUMENT == "--help"
+HELP_ARGUMENT = "--help"
 
 MIN_DISTANCE = 0.6
 
