@@ -61,16 +61,13 @@ class CSVDatabase(object):
         # write into the csv file
         self._parser.write_csv(self._data)
         
-    def check_for_matches(self, generated_face):
-        matches = []
-        for face in self._data:
-            # check for match
-            if face == generated_face:
-                matches.append(face)
-        return matches
+    def check_for_match(self, generated_face):
+        return [face for face in self._data if face == generated_face]
         
-    def generate_face(self):
-        # generated a face using inverse sample
-        return face.Face(features=self._analyzer.sample_face())
+    def check_for_matches(self, faces):
+        return [len(self.check_for_match(face)) for face in faces]
+        
+    def generate_faces(self, batch_size=constants.DEFAULT_ATTACK_SIZE):
+        return self._analyzer.generate_faces(batch_size)
    
    

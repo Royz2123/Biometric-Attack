@@ -4,6 +4,8 @@ import scipy.interpolate as interpolate
 import constants
 
 class FaceTransformation(object):
+    HISTOGRAM_BINS = 40
+
     def __init__(self, face_mat):    
         # calculate the mean and subtract from matrix
         self._mean = np.matrix.mean(face_mat)
@@ -16,16 +18,24 @@ class FaceTransformation(object):
         eigen = zip(*np.lianlg.eig(face_mat))
         self._eig_vectors, self._eig_values = zip(*sorted(eigen, lambda x: x[1]))
         
-        # caluclate this face_mat by projecting
+        # calculate this face_mat by projecting
         self._face_mat = self.project_faces(face_mat)
+        
+        # now for each feature find inv function
+        self._features = [self.create_inv(f_d) for f_d in self._face_mat.transpose()]
+
         
     def project_faces(self, face_mat):
         return np.mat(face_mat) * np.mat(self._eig_vectors)
         
-    def sample_faces(self, batch_size=constants.DEFAULT_ATTACK_SIZE):
-        return inverse_transform_sampling
+    def generate_faces(self, batch_size=constants.DEFAULT_ATTACK_SIZE):
+        features = [gen_feature(f_index, batch_size) for f_index in range(len(self._features))]
+        return [face.Face(features=arr) for arr in np.array(features).transpose()]
         
-    def inverse_transform_sampling(data, n_bins=40, n_samples=1000):
+    def gen_feature(self, f_index, batch_size):
+        return self._features[f_index](np.random.rand(batch_size))
+           
+    def create_inv(data, n_bins=40):
         hist, bin_edges = np.histogram(data, bins=n_bins, density=True)
         cum_values = np.zeros(bin_edges.shape)
         cum_values[1:] = np.cumsum(hist*np.diff(bin_edges))
