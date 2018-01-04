@@ -32,4 +32,7 @@ class CSVParser(object):
             self.write_file(','.join(list(row)) + '\n')
 
     def del_csv(self):
-        os.remove(self._filename)
+        try:
+            os.remove(self._filename)
+        except:
+            pass

@@ -12,8 +12,8 @@ class CSVDatabase(object):
 
     def __init__(
         self,
-        face_dir=constants.DEFAULT_FACE_DIR,
-        csv_filename=constants.DEFAULT_FACES_CSV_NAME,
+        face_dir=constants.DEFAULT_TRAINING_DIR,
+        csv_filename=constants.DEFAULT_TRAINING_CSV_NAME,
         create_database=False
     ):
         # set filenames
@@ -97,6 +97,7 @@ class CSVDatabase(object):
         return False, ""
 
     def check_for_match(self, generated_face):
+        print(len([face for face in self._data if face == generated_face]))
         return [face for face in self._data if face == generated_face]
 
     def check_for_matches(self, faces):
