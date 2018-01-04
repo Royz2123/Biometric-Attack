@@ -19,13 +19,16 @@ class CSVDatabase(object):
         self._csv_filename = csv_filename
         self._face_dir = face_dir
 
+        # create a face transform object
+        self._analyzer = face_transform.FaceTransformation()
+
         # create csv parser and data
         self._parser = face_csv_parser.FaceCSVParser(csv_filename)
         self._data = []
         self.create_database()
 
-        # create a face transform object
-        self._analyzer = face_transform.FaceTransformation(self.get_face_mat())
+        # set the transform PCA and such
+        self._analyzer.set_transform(self.get_face_mat())
         self.project_faces()
 
     def __getitem__(self, key):
@@ -55,11 +58,22 @@ class CSVDatabase(object):
 
     def create_database(self):
         # create all of the faces
-        for face_filename in os.listdir(self._face_dir):
+        for i, face_filename in enumerate(os.listdir(self._face_dir)):
+            # print progress
+            print("%s:\t\t%d/%d" % (face_filename, i + 1, len(os.listdir(self._face_dir))))
+
+            # find readable image
             new_path = self._face_dir + face_filename
-            self._data.append(
-                face.Face(new_path + "/" + os.listdir(new_path)[0])
-            )
+            readable_filename = ""
+            for filename in os.listdir(new_path):
+                if util.readable_image(filename):
+                    readable_filename = filename
+                    break
+
+            # create face and add to database
+            curr_face = face.Face(new_path + "/" + readable_filename)
+            curr_face.set_features(self._analyzer)
+            self._data.append(curr_face)
 
         # number of faces in database
         self._data_len = len(self._data)

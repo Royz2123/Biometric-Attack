@@ -1,0 +1,3 @@
+Great link that computes the feature vector:
+
+https://github.com/davisking/dlib/blob/master/python_examples/face_recognition.py

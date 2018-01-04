@@ -1,3 +1,4 @@
+import dlib
 import numpy as np
 import scipy.interpolate as interpolate
 
@@ -6,7 +7,14 @@ import constants
 class FaceTransformation(object):
     HISTOGRAM_BINS = 40
 
-    def __init__(self, face_mat):
+    def __init__(self):
+        # set dlib analyzers
+        self._detector = dlib.get_frontal_face_detector()
+        self._sp = dlib.shape_predictor(constants.SHAPE_PREDICTOR_PATH)
+        self._facerec = dlib.face_recognition_model_v1(constants.FACE_REC_MODEL_PATH)
+
+    def set_transform(self, face_mat):
+        # se face mat size
         face_mat_size = (np.size(face_mat, 0), np.size(face_mat, 1))
 
         # calculate the mean and subtract from matrix
@@ -46,7 +54,37 @@ class FaceTransformation(object):
         return inv_cdf(r)
 
 
-    @staticmethod
-    def find_features(face_im):
-        # dlib features, call function
-        return [3, 7]
+    """
+    Compute the 128D vector that describes the face in img identified by
+    shape.  In general, if two face descriptor vectors have a Euclidean
+    distance between them less than 0.6 then they are from the same
+    person, otherwise they are from different people. Here we just print
+    the vector to the screen.
+
+    It should also be noted that you can also call this function like this:
+    face_descriptor = facerec.compute_face_descriptor(img, shape, 100)
+    The version of the call without the 100 gets 99.13% accuracy on LFW
+    while the version with 100 gets 99.38%.  However, the 100 makes the
+    call 100x slower to execute, so choose whatever version you like.  To
+    explain a little, the 3rd argument tells the code how many times to
+    jitter/resample the image.  When you set it to 100 it executes the
+    face descriptor extraction 100 times on slightly modified versions of
+    the face and returns the average result.  You could also pick a more
+    middle value, such as 10, which is only 10x slower but still gets an
+    LFW accuracy of 99.3%.
+    """
+    def find_features(self, img, debug=False):
+        # find the bounding boxes of each face.
+        bounding_box = self._detector(img, 1)[0]
+
+        # Process the first face
+        shape = self._sp(img, bounding_box)
+
+        # Compute the 128D vector
+        face_descriptor = self._facerec.compute_face_descriptor(img, shape)
+
+        # debug the picture
+        if debug:
+            print(face_descriptor)
+
+        return np.array(face_descriptor)

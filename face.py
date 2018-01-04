@@ -10,9 +10,6 @@ class Face(object):
         if filename != "":
             self._filename = filename
             self._features = []
-
-            # find facial features
-            self.set_features()
         else:
             self._filename = constants.GENERATED_FACE_FILENAME
             self._features = features
@@ -48,9 +45,9 @@ class Face(object):
     def filename(self, f):
         self._filename = f
 
-    def set_features(self):
+    def set_features(self, face_transform):
         # read the image
         face_im = util.read_image(self._filename)
 
         # find features
-        self._features = f_t.FaceTransformation.find_features(face_im)
+        self._features = face_transform.find_features(face_im)
