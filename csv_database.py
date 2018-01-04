@@ -1,3 +1,4 @@
+import numpy as np
 import os
 
 import constants
@@ -24,7 +25,7 @@ class CSVDatabase(object):
         self.create_database()
 
         # create a face transform object
-        self._analyzer = face_transform.FaceTransform(self.get_face_mat())
+        self._analyzer = face_transform.FaceTransformation(self.get_face_mat())
         self.project_faces()
 
     def __getitem__(self, key):
@@ -55,7 +56,10 @@ class CSVDatabase(object):
     def create_database(self):
         # create all of the faces
         for face_filename in os.listdir(self._face_dir):
-            self._data.append(face.Face(os.listdir(face_filename)[0]))
+            new_path = self._face_dir + face_filename
+            self._data.append(
+                face.Face(new_path + "/" + os.listdir(new_path)[0])
+            )
 
         # number of faces in database
         self._data_len = len(self._data)
