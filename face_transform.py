@@ -74,11 +74,13 @@ class FaceTransformation(object):
     LFW accuracy of 99.3%.
     """
     def find_features(self, img, debug=False):
-        # find the bounding boxes of each face.
-        bounding_box = self._detector(img, 1)[0]
+        # find the bounding boxes of each face (if exists)
+        bounding_boxes = self._detector(img, 1)
+        if not len(bounding_boxes):
+            return None
 
         # Process the first face
-        shape = self._sp(img, bounding_box)
+        shape = self._sp(img, bounding_boxes[0])
 
         # Compute the 128D vector
         face_descriptor = self._facerec.compute_face_descriptor(img, shape)

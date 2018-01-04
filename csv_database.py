@@ -63,23 +63,33 @@ class CSVDatabase(object):
             print("%s:\t\t%d/%d" % (face_filename, i + 1, len(os.listdir(self._face_dir))))
 
             # find readable image
-            new_path = self._face_dir + face_filename
-            readable_filename = ""
-            for filename in os.listdir(new_path):
-                if util.readable_image(filename):
-                    readable_filename = filename
-                    break
+            found, im_path = self.find_face_filename(face_filename)
+            if not found:
+                print("NOT FOUND")
+                continue
 
             # create face and add to database
-            curr_face = face.Face(new_path + "/" + readable_filename)
-            curr_face.set_features(self._analyzer)
-            self._data.append(curr_face)
+            curr_face = face.Face(self._face_dir + im_path)
+            if curr_face.set_features(self._analyzer) != -1:
+                self._data.append(curr_face)
+
+            # write into the csv file
+            self._parser.del_csv()
+            self._parser.write_csv(self._data)
 
         # number of faces in database
         self._data_len = len(self._data)
 
-        # write into the csv file
-        self._parser.write_csv(self._data)
+
+    def find_face_filename(self, curr_dir):
+        for filename in os.listdir(self._face_dir + curr_dir):
+            if filename == "img_scl":
+                new_dir = curr_dir + "/img_scl/" + curr_dir
+                return self.find_face_filename(new_dir)
+
+            elif util.readable_image(filename):
+                return True, curr_dir + "/" + filename
+        return False, ""
 
     def check_for_match(self, generated_face):
         return [face for face in self._data if face == generated_face]

@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 
 class CSVParser(object):
@@ -28,3 +30,6 @@ class CSVParser(object):
     def write_csv(self, arr):
         for row in arr:
             self.write_file(','.join(list(row)) + '\n')
+
+    def del_csv(self):
+        os.remove(self._filename)

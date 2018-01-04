@@ -50,4 +50,10 @@ class Face(object):
         face_im = util.read_image(self._filename)
 
         # find features
-        self._features = face_transform.find_features(face_im)
+        features = face_transform.find_features(face_im)
+
+        if features is None:
+            return -1
+
+        self._features = features
+        return 0

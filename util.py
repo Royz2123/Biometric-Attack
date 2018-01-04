@@ -5,7 +5,7 @@ from skimage import io
 #    return cv2.imread(filename)
 
 def readable_image(filename):
-    return "JPG" in filename
+    return "JPG" in filename.upper() and "IMG" in filename.upper()
 
 def read_image(filename):
     return io.imread(filename)
