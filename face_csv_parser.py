@@ -11,15 +11,15 @@ class FaceCSVParser(csv_parser.CSVParser):
         arr = super(FaceCSVParser, self).read_csv()
         return [
             face.Face(
-                filename=face[0],
-                features=np.array([float(f) for f in face[1:]])
+                filename=face_row[0],
+                features=np.array([float(f) for f in face_row[1:]])
             )
-            for face in arr
+            for face_row in arr
         ]
 
     def write_csv(self, arr):
         csv_format = [
-            np.array([face.filename] + [str(f) for f in face.features])
-            for face in arr
+            np.array([face_obj.filename] + [str(f) for f in face_obj.features])
+            for face_obj in arr
         ]
         super(FaceCSVParser, self).write_csv(csv_format)

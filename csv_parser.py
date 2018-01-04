@@ -11,7 +11,7 @@ class CSVParser(object):
         with open(self._filename, "r") as f:
             while True:
                 buf = f.read()
-                if buf is None:
+                if len(buf) == 0:
                     break
                 ret += buf
         return ret
@@ -23,7 +23,7 @@ class CSVParser(object):
     def read_csv(self):
         file_content = self.read_file()
         rows = []
-        for row in file_content.split('\n'):
+        for row in file_content.split('\n')[:-1]:
             rows.append(row.split(','))
         return np.array(rows)
 

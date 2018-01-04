@@ -3,6 +3,7 @@ import numpy as np
 import scipy.interpolate as interpolate
 
 import constants
+import face
 
 class FaceTransformation(object):
     HISTOGRAM_BINS = 40
@@ -16,17 +17,30 @@ class FaceTransformation(object):
     def set_transform(self, face_mat):
         # se face mat size
         face_mat_size = (np.size(face_mat, 0), np.size(face_mat, 1))
+        self._dimension = face_mat_size[1]
 
         # calculate the mean and subtract from matrix
         self._mean = np.matrix.mean(face_mat)
         np.subtract(face_mat, np.full(face_mat_size, self._mean))
 
         # calculate covariance matrix
-        self._cov = np.cov(face_mat)
+        self._cov = np.cov(face_mat.transpose())
 
         # calculate and sort eigenvalues and eigenvectors
-        eigen = zip(*np.linalg.eig(face_mat))
-        self._eig_vectors, self._eig_values = zip(*sorted(eigen, lambda x: x[1]))
+        eig_values, eig_vectors = np.linalg.eig(self._cov)
+        eig_pairs = [
+            (np.abs(eig_values[i]), eig_vectors[:,i])
+            for i in range(len(eig_values))
+        ]
+        eig_pairs.sort(key=lambda x: x[0], reverse=True)     # sort based on values (second in pair)
+
+        # find projectionn matrix (no need for dimensionality decrease for now)
+        self._matrix_w = np.hstack(
+            tuple([
+                eig_pairs[i][1].reshape(self._dimension, 1)
+                for i in range(self._dimension)
+            ])
+        )
 
         # calculate this face_mat by projecting
         self._face_mat = self.project_faces(face_mat)
@@ -36,22 +50,20 @@ class FaceTransformation(object):
 
 
     def project_faces(self, face_mat):
-        return np.mat(face_mat) * np.mat(self._eig_vectors)
+        return np.mat(face_mat) * np.mat(self._matrix_w)
 
     def generate_faces(self, batch_size=constants.DEFAULT_ATTACK_SIZE):
-        features = [gen_feature(f_index, batch_size) for f_index in range(len(self._features))]
+        features = [self.gen_feature(f_index, batch_size) for f_index in range(len(self._features))]
         return [face.Face(features=arr) for arr in np.array(features).transpose()]
 
     def gen_feature(self, f_index, batch_size):
         return self._features[f_index](np.random.rand(batch_size))
 
-    def create_inv(data, n_bins=40):
+    def create_inv(self, data, n_bins=40):
         hist, bin_edges = np.histogram(data, bins=n_bins, density=True)
         cum_values = np.zeros(bin_edges.shape)
         cum_values[1:] = np.cumsum(hist*np.diff(bin_edges))
-        inv_cdf = interpolate.interp1d(cum_values, bin_edges)
-        r = np.random.rand(n_samples)
-        return inv_cdf(r)
+        return interpolate.interp1d(cum_values, bin_edges)
 
 
     """

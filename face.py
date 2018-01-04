@@ -9,10 +9,9 @@ class Face(object):
     def __init__(self, filename="", features=[]):
         if filename != "":
             self._filename = filename
-            self._features = []
         else:
             self._filename = constants.GENERATED_FACE_FILENAME
-            self._features = features
+        self._features = features
 
     def distance(self, other):
         return np.linalg.norm(self._features - other._features)

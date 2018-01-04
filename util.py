@@ -1,5 +1,6 @@
 # import cv2
 from skimage import io
+import matplotlib.pyplot as plt
 
 # def read_image(filename):
 #    return cv2.imread(filename)

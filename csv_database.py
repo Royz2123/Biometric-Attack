@@ -14,6 +14,7 @@ class CSVDatabase(object):
         self,
         face_dir=constants.DEFAULT_FACE_DIR,
         csv_filename=constants.DEFAULT_FACES_CSV_NAME,
+        create_database=False
     ):
         # set filenames
         self._csv_filename = csv_filename
@@ -25,7 +26,14 @@ class CSVDatabase(object):
         # create csv parser and data
         self._parser = face_csv_parser.FaceCSVParser(csv_filename)
         self._data = []
-        self.create_database()
+
+        if create_database:
+            self.create_database()
+        else:
+            self._data = self._parser.read_csv()
+
+        # number of faces in database
+        self._data_len = len(self._data)
 
         # set the transform PCA and such
         self._analyzer.set_transform(self.get_face_mat())
@@ -54,7 +62,7 @@ class CSVDatabase(object):
 
         # update all the faces matrix
         for i in range(self._data_len):
-            faces[i].features = proj_faces[i]
+            self._data[i].features = proj_faces[i]
 
     def create_database(self):
         # create all of the faces
@@ -76,9 +84,6 @@ class CSVDatabase(object):
             # write into the csv file
             self._parser.del_csv()
             self._parser.write_csv(self._data)
-
-        # number of faces in database
-        self._data_len = len(self._data)
 
 
     def find_face_filename(self, curr_dir):
