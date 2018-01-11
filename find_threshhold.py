@@ -7,9 +7,9 @@ import face
 import constants
 import util
 
-USER_DIR = constants.DEFAULT_TESTING_FACE_DIR
-OTHER_DIR = constants.DEFAULT_TESTING_FACE_DIR_2
-
+DIR_1 = constants.DEFAULT_TESTING_FACE_DIR_1
+DIR_2 = constants.DEFAULT_TESTING_FACE_DIR_2
+DIR_3 = constants.DEFAULT_TESTING_FACE_DIR_3
 
 def get_faces(dirname):
     f_t = face_transform.FaceTransformation()
@@ -30,17 +30,19 @@ def get_faces(dirname):
 
 
 def main():
-    faces2 = get_faces(OTHER_DIR)
+    faces = [get_faces(DIR_1), get_faces(DIR_2), get_faces(DIR_3)]
 
-    points1 = []
-    for face in get_faces(USER_DIR):
-        points1.append(faces2[0].distance(face))
+    points = []
+    for class_index, curr_class in enumerate(faces):
+        curr_test = []
+        for test_group in faces:
+            curr_samples = []
+            for face in test_group:
+                curr_samples.append(curr_class[0].distance(face))
+            curr_test.append(curr_samples)
+        points.append(curr_test)
 
-    points2 = []
-    for face in faces2[1:]:
-        points2.append(faces2[0].distance(face))
-
-    util.plot_classes(points1, points2)
+    util.plot_classes(points)
 
 
 

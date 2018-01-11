@@ -14,9 +14,12 @@ DEFAULT_TESTING_CSV_NAME = "databases/test.csv"
 DEFAULT_ATTACK_SIZE = 10000
 
 # Oren Weimann
-DEFAULT_TESTING_FACE_DIR = "faces/all_faces/all_labeld_faces_corrected/033"
+DEFAULT_TESTING_FACE_DIR_1 = "faces/all_faces/all_labeld_faces_corrected/033"
 
-# ROn shachar
+# Tali Sarig
+DEFAULT_TESTING_FACE_DIR_3 = "faces/all_faces/all_labeld_faces_corrected/022"
+
+# Ron shachar
 DEFAULT_TESTING_FACE_DIR_2 = "faces/test_ron"
 
 
