@@ -1,0 +1,5 @@
+TODO:
+
+1) play and find new threshold (for easy dataset)
+
+2) check similarity between synthesized gaussians to actual gaussians

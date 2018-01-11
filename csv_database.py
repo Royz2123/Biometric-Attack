@@ -97,7 +97,6 @@ class CSVDatabase(object):
         return False, ""
 
     def check_for_match(self, generated_face):
-        print(len([face for face in self._data if face == generated_face]))
         return [face for face in self._data if face == generated_face]
 
     def check_for_matches(self, faces):

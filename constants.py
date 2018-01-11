@@ -11,7 +11,13 @@ DEFAULT_TRAINING_DIR = "faces/train/"
 DEFAULT_TESTING_DIR = "faces/test/"
 DEFAULT_TRAINING_CSV_NAME = "databases/train.csv"
 DEFAULT_TESTING_CSV_NAME = "databases/test.csv"
-DEFAULT_ATTACK_SIZE = 1000
+DEFAULT_ATTACK_SIZE = 10000
+
+# Oren Weimann
+DEFAULT_TESTING_FACE_DIR = "faces/all_faces/all_labeld_faces_corrected/033"
+
+# ROn shachar
+DEFAULT_TESTING_FACE_DIR_2 = "faces/test_ron"
 
 
 SHAPE_PREDICTOR_PATH = "dlib_models/shape_predictor_68.dat"

@@ -1,9 +1,12 @@
 import dlib
+import matplotlib.pyplot as plt
 import numpy as np
 import scipy.interpolate as interpolate
+import time
 
 import constants
 import face
+import util
 
 class FaceTransformation(object):
     HISTOGRAM_BINS = 40
@@ -52,18 +55,26 @@ class FaceTransformation(object):
     def project_faces(self, face_mat):
         return np.mat(face_mat) * np.mat(self._matrix_w)
 
-    def generate_faces(self, batch_size=constants.DEFAULT_ATTACK_SIZE):
+    def generate_faces(self, batch_size=constants.DEFAULT_ATTACK_SIZE*100):
         features = [self.gen_feature(f_index, batch_size) for f_index in range(len(self._features))]
         return [face.Face(features=arr) for arr in np.array(features).transpose()]
 
     def gen_feature(self, f_index, batch_size):
         return self._features[f_index](np.random.rand(batch_size))
 
-    def create_inv(self, data, n_bins=40):
+    def create_inv(self, data, n_bins=30, debug=True):
         hist, bin_edges = np.histogram(data, bins=n_bins, density=True)
+        if debug:
+            util.plot_hist(hist, bin_edges)
         cum_values = np.zeros(bin_edges.shape)
         cum_values[1:] = np.cumsum(hist*np.diff(bin_edges))
         return interpolate.interp1d(cum_values, bin_edges)
+
+    def plot_hist(self, hist, bin_edges):
+        width = 0.7 * (bin_edges[1] - bin_edges[0])
+        center = (bin_edges[:-1] + bin_edges[1:]) / 2
+        plt.bar(center, hist, align='center', width=width)
+        plt.show()
 
 
     """
