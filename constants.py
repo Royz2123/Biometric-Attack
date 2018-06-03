@@ -1,7 +1,7 @@
 
 HELP_ARGUMENT = "--help"
 
-MIN_DISTANCE = 0.6
+MIN_DISTANCE = 0.4
 
 GENERATED_FACE_FILENAME = "GEN FACE"
 
@@ -11,7 +11,9 @@ DEFAULT_TRAINING_DIR = "faces/train/"
 DEFAULT_TESTING_DIR = "faces/test/"
 DEFAULT_TRAINING_CSV_NAME = "databases/train.csv"
 DEFAULT_TESTING_CSV_NAME = "databases/test.csv"
-DEFAULT_ATTACK_SIZE = 10000
+DEFAULT_ATTACK_SIZE = 50000000
+
+ATTACK_BATCH = 1000
 
 # Oren Weimann
 DEFAULT_TESTING_FACE_DIR_1 = "faces/all_faces/all_labeld_faces_corrected/033"

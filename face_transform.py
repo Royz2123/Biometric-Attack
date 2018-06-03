@@ -1,6 +1,7 @@
 import dlib
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.matlib
 import scipy.interpolate as interpolate
 import time
 
@@ -18,13 +19,24 @@ class FaceTransformation(object):
         self._facerec = dlib.face_recognition_model_v1(constants.FACE_REC_MODEL_PATH)
 
     def set_transform(self, face_mat):
+        # face_mat = face_mat.transpose()
+
+        """
+        #Plots the first feature:
+        data = face_mat.transpose()[0]
+        print(data.shape)
+        hist, bin_edges = np.histogram(data, bins=FaceTransformation.HISTOGRAM_BINS, density=True)
+        self.plot_hist(hist, bin_edges)
+        """
+
         # se face mat size
         face_mat_size = (np.size(face_mat, 0), np.size(face_mat, 1))
         self._dimension = face_mat_size[1]
 
         # calculate the mean and subtract from matrix
-        self._mean = np.matrix.mean(face_mat)
-        np.subtract(face_mat, np.full(face_mat_size, self._mean))
+        self._mean = np.matrix.mean(face_mat, 0)
+        repped = numpy.matlib.repmat(self._mean, np.size(face_mat, 0), 1)
+        face_mat = np.subtract(face_mat, repped)
 
         # calculate covariance matrix
         self._cov = np.cov(face_mat.transpose())
@@ -44,6 +56,7 @@ class FaceTransformation(object):
                 for i in range(self._dimension)
             ])
         )
+        self._inv_matrix_w = np.linalg.inv(self._matrix_w)
 
         # calculate this face_mat by projecting
         self._face_mat = self.project_faces(face_mat)
@@ -51,30 +64,64 @@ class FaceTransformation(object):
         # now for each feature find inv function
         self._features = [self.create_inv(f_d) for f_d in self._face_mat.transpose()]
 
+        """
+        Small code sample for checking the sampling quality
+
+        data = self._face_mat.transpose()[0]
+        hist, bin_edges = np.histogram(data, bins=FaceTransformation.HISTOGRAM_BINS, density=True)
+        self.plot_hist(hist, bin_edges)
+
+        data = self.gen_feature(0, 10000)
+        hist, bin_edges = np.histogram(data, bins=FaceTransformation.HISTOGRAM_BINS, density=True)
+        self.plot_hist(hist, bin_edges)
+
+
+        # Plots the generated_faces:
+
+        data = self.generate_faces(10000)
+        data = [face.features[0] for face in data]
+        hist, bin_edges = np.histogram(data, bins=FaceTransformation.HISTOGRAM_BINS, density=True)
+        self.plot_hist(hist, bin_edges)
+        plt.show()
+        """
+
+
+    def unproject_faces(self, data):
+        # First mulriply by inverse of projection matrix
+        data = np.mat(data) * np.mat(self._inv_matrix_w)
+
+        # Then add the original mean
+        repped = numpy.matlib.repmat(self._mean, np.size(data, 0), 1)
+        data = np.add(data, repped)
+        return data
+
 
     def project_faces(self, face_mat):
         return np.mat(face_mat) * np.mat(self._matrix_w)
 
-    def generate_faces(self, batch_size=constants.DEFAULT_ATTACK_SIZE*100):
+    def generate_faces(self, batch_size=constants.DEFAULT_ATTACK_SIZE * 100):
         features = [self.gen_feature(f_index, batch_size) for f_index in range(len(self._features))]
-        return [face.Face(features=arr) for arr in np.array(features).transpose()]
+        features = self.unproject_faces(np.array(features).transpose())
+        faces = [face.Face(features=arr) for arr in np.array(features)]
+        return faces
 
     def gen_feature(self, f_index, batch_size):
         return self._features[f_index](np.random.rand(batch_size))
 
-    def create_inv(self, data, n_bins=30, debug=True):
+    def create_inv(self, data, n_bins=HISTOGRAM_BINS, debug=False):
         hist, bin_edges = np.histogram(data, bins=n_bins, density=True)
         if debug:
             util.plot_hist(hist, bin_edges)
         cum_values = np.zeros(bin_edges.shape)
         cum_values[1:] = np.cumsum(hist*np.diff(bin_edges))
-        return interpolate.interp1d(cum_values, bin_edges)
+        cdf = interpolate.interp1d(cum_values, bin_edges)
+        return cdf
 
     def plot_hist(self, hist, bin_edges):
         width = 0.7 * (bin_edges[1] - bin_edges[0])
         center = (bin_edges[:-1] + bin_edges[1:]) / 2
         plt.bar(center, hist, align='center', width=width)
-        plt.show()
+        # plt.show()
 
 
     """

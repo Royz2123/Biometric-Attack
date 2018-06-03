@@ -1,6 +1,7 @@
 # import cv2
 from skimage import io
 import matplotlib.pyplot as plt
+import numpy as np
 
 # def read_image(filename):
 #    return cv2.imread(filename)
@@ -25,6 +26,12 @@ def plot_hist(hist, bin_edges):
     plt.bar(center, hist, align='center', width=width)
     plt.show()
 
+
+def plot_freqs(freq1, freq2):
+    bins = np.linspace(0, 1.5, 50)
+    plt.hist([freq1, freq2], bins, label=['freq1', 'freq2'])
+    plt.legend(loc='upper right')
+    plt.show()
 
 def plot_classes(classes):
     for i1, c1 in enumerate(classes):

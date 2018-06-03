@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import sys
 
 import attacker
@@ -28,27 +29,42 @@ def print_usage():
 
 
 
-def attack_self(args):
-    print("Generating training database from %s. Saving in %s. " % (args[0], args[2]))
-    training_database = csv_database.CSVDatabase(args[0], args[2])
+def attack_base(training, testing, attack_size):
+    print("Generating training database:")
+    training_database = csv_database.CSVDatabase(
+        training["folder"],
+        training["csv"]
+    )
     print("Training dataset initialized. Total samples = %d" % len(training_database._data))
 
-    print("Attacking the %s database. Attack size is %d." % (args[0], int(args[4])))
-    database_attacker = attacker.Attacker(training_database, training_database, int(args[4]))
-    database_attacker.attack()
-
-def attack_other(args):
-    print("Generating training database from %s. Saving in %s. " % (args[0], args[2]))
-    training_database = csv_database.CSVDatabase(args[0], args[2])
-    print("Training dataset initialized. Total samples = %d" % len(training_database._data))
-
-    print("Generating testing database from %s. Saving in %s. " % (args[1], args[3]))
-    testing_database = csv_database.CSVDatabase(args[1], args[3])
+    print("Generating testing database: ")
+    testing_database = csv_database.CSVDatabase(
+        testing["folder"],
+        testing["csv"]
+    )
     print("Testing dataset initialized. Total samples = %d" % len(testing_database._data))
 
-    print("Attacking the %s database. Attack size is %d." % (args[1], int(args[4])))
-    database_attacker = attacker.Attacker(training_database, testing_database, int(args[4]))
-    database_attacker.attack()
+    print("Attacking... Attack size is %d." % (attack_size))
+    database_attacker = attacker.Attacker(training_database, testing_database, attack_size)
+    return database_attacker.attack()
+
+
+def thresh_test_attack(training, testing):
+    xnew = []
+    ynew = []
+
+    orig_dist = constants.MIN_DISTANCE
+    for thresh in range(0, 10):
+        constants.MIN_DISTANCE = orig_dist + thresh * 0.01
+        xnew.append(orig_dist + thresh * 0.01)
+        ynew.append(attack_base(training, testing, 100000))
+
+    plt.plot(xnew, ynew)
+    plt.ylabel("Hits for 100000 attacks")
+    plt.xlabel("Threshhold")
+    plt.show()
+
+
 
 def main():
     if constants.HELP_ARGUMENT in sys.argv:
@@ -57,11 +73,25 @@ def main():
 
     args = sys.argv[1:] + DEFAULT_ARGS[len(sys.argv)-1:]
 
-    print("\nFirst attacking the training_database\n")
-    attack_self(args)
+    # Database info
+    training = {
+        "folder" : args[0],
+        "csv" : args[2],
+    }
+    testing = {
+        "folder" : args[1],
+        "csv" : args[3]
+    }
+    attack_size = args[4]
+
+    # print("\nFirst attacking the training_database\n")
+    # attack_self(args)
 
     print("\nNow attacking the testing_database\n")
-    attack_other(args)
+
+    attack_base(training, testing, attack_size)
+
+    # thresh_test_attack(training, testing)
 
 
 

@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import time
 
 import constants
 import face
@@ -37,7 +38,7 @@ class CSVDatabase(object):
 
         # set the transform PCA and such
         self._analyzer.set_transform(self.get_face_mat())
-        self.project_faces()
+        #self.project_faces()
 
     def __getitem__(self, key):
         return self._data[key]
@@ -56,6 +57,7 @@ class CSVDatabase(object):
     def get_face_mat(self):
         return np.mat([face.features for face in self._data])
 
+    """
     def project_faces(self):
         # project all data onto new basis
         proj_faces = self._analyzer.project_faces(self.get_face_mat())
@@ -63,6 +65,7 @@ class CSVDatabase(object):
         # update all the faces matrix
         for i in range(self._data_len):
             self._data[i].features = proj_faces[i]
+    """
 
     def create_database(self):
         # create all of the faces
@@ -100,6 +103,9 @@ class CSVDatabase(object):
         return [face for face in self._data if face == generated_face]
 
     def check_for_matches(self, faces):
+        #print(faces[0])
+        #print(self._data[0])
+        #print(faces[0].distance(self._data[0]))
         return [len(self.check_for_match(face)) for face in faces]
 
     def generate_faces(self, batch_size=constants.DEFAULT_ATTACK_SIZE):
