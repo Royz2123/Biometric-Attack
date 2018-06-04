@@ -32,7 +32,16 @@ Another interesting phenomenon is the rise in hits as a factor of the threshhold
 
 
 
-## Running the attack
+## Setup
+
+### Prerequisites
+
+You will need to download the DLib library (links coming soon). Our code has been fitted to work on a virtualenv, on Ubuntu 16.04.
+
+### Running the attack
+
+Run the following code from the terminal. A bash file has also been added:
+
 
 
 ```bash
