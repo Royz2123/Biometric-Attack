@@ -15,14 +15,16 @@ import util
 )=range(4)
 
 class Attacker(object):
-    LOG_FILE = "logs/attack_log"
+    LOG_FILE = "logs/general/attack_log"
+    SEED_FILE = "logs/seeds/seed_file"
 
     def __init__(
         self,
         training_db,
         testing_db,
         attack_size=constants.DEFAULT_ATTACK_SIZE,
-        logfile=LOG_FILE
+        logfile=LOG_FILE,
+        seed_file=SEED_FILE
     ):
         self._training_db = training_db
         self._testing_db = testing_db
@@ -30,11 +32,16 @@ class Attacker(object):
         self._attack_size = attack_size
 
         # create log file
-        self._log_file = logfile + "_" + time.strftime('%d:%m:%Y_%H:%M:%S')
-
+        start_time = time.strftime('%d:%m:%Y_%H:%M:%S')
+        self._log_file = logfile + "_" + start_time
+        self._seed_file = seed_file + "_" + start_time
 
     # attack the database for self._attacks
     def attack(self, debug_level=PLOT_END_LEVEL):
+        # First save the random seed
+        with open(self._seed_file, "w+") as f:
+            f.write(str(np.random.get_state()))
+
         with open(self._log_file, "w+") as f:
             if debug_level:
                 print("\n~~~~Attack Log~~~~\n")
@@ -82,12 +89,12 @@ class Attacker(object):
             f.write(
                 """
                 Total hits:\t%s
-                Frequencies:\t%s\n
                 Random seed:\t%s\n
+                Frequencies:\t%s\n
                 """ % (
                     len(all_matches),
+                    self._seed_file,
                     freqs,
-                    np.random.get_state()
                 )
             )
 
