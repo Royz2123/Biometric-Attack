@@ -40,6 +40,12 @@ class CSVDatabase(object):
         self._analyzer.set_transform(self.get_face_mat())
         #self.project_faces()
 
+    def __str__(self):
+        return "Faces folder:\t%s\tFeature csv file:\t%s\t" % (
+            self._face_dir,
+            self._csv_filename,
+        )
+
     def __getitem__(self, key):
         return self._data[key]
 
@@ -100,13 +106,13 @@ class CSVDatabase(object):
         return False, ""
 
     def check_for_match(self, generated_face):
-        return [face for face in self._data if face == generated_face]
+        return [index for index, face in enumerate(self._data) if face == generated_face]
 
     def check_for_matches(self, faces):
         #print(faces[0])
         #print(self._data[0])
         #print(faces[0].distance(self._data[0]))
-        return [len(self.check_for_match(face)) for face in faces]
+        return [self.check_for_match(face) for face in faces]
 
     def generate_faces(self, batch_size=constants.DEFAULT_ATTACK_SIZE):
         return self._analyzer.generate_faces(batch_size)

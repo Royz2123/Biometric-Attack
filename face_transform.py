@@ -121,7 +121,7 @@ class FaceTransformation(object):
         width = 0.7 * (bin_edges[1] - bin_edges[0])
         center = (bin_edges[:-1] + bin_edges[1:]) / 2
         plt.bar(center, hist, align='center', width=width)
-        # plt.show()
+        plt.show()
 
 
     """
