@@ -1,5 +1,6 @@
 # Face-Entropy
-This project has been created as a Final project for my B.A. in CS. The project attempts to find the actual security of state-of-the-art facial recognition technologies, and attempts to prove that they are vulnerable to complex brute-force attacks.
+
+This project has been created as a Final Project for my B.A. in CS. The project attempts to find the enthropy of face feature spaces, and attempts to prove that they are vulnerable to brute-force attacks.
 
 
 ## Background
@@ -31,7 +32,16 @@ Another interesting phenomenon is the rise in hits as a factor of the threshhold
 
 
 
-## Running the attack
+## Setup
+
+### Prerequisites
+
+You will need to download the DLib library (links coming soon). Our code has been fitted to work on a virtualenv, on Ubuntu 16.04.
+
+### Running the attack
+
+Run the following code from the terminal. A bash file has also been added:
+
 
 
 ```bash
