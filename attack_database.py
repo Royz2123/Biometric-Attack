@@ -9,7 +9,7 @@ import csv_database
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser = argparse.ArgumentParser(description='Brute force attack on a database')
     parser.add_argument('--training-dir', default=constants.DEFAULT_TRAINING_DIR,
                        help='directory of all the training faces')
     parser.add_argument('--testing-dir', default=constants.DEFAULT_TESTING_DIR,
@@ -22,6 +22,8 @@ def parse_args():
                        help='number of faces to be generated')
     parser.add_argument('--recover-time', default=None, type=str,
                        help='recover from previous run')
+    parser.add_argument('--threshhold', default=constants.MIN_DISTANCE, type=float,
+                       help='threshhold where to faces are considered identical')
     args = parser.parse_args()
     return args
 
@@ -69,11 +71,8 @@ def thresh_test_attack(training, testing):
 
 
 def main():
-    if constants.HELP_ARGUMENT in sys.argv:
-        print_usage()
-        return
-
     args = parse_args()
+    constants.MIN_DISTANCE = args.threshhold
 
     print("\nNow attacking the testing_database\n")
 

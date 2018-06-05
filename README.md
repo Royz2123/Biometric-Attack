@@ -67,6 +67,17 @@ deactivate
 ```
 
 
+#### Example 3 - specifying a new threshhold
+
+For testing purposes, playing around with the threshhold can be done as follows:
+
+```bash
+workon facecourse-py3
+python3 attack_database.py --threshhold 0.6
+deactivate
+```
+
+
 #### Example 3 - using an existing seed, from a previous run
 
 We make recovering a previous run super simple. Find the run that you wish to obtain it's random seed, and copy its recovery time (Either copy from filename or take first field of log file)
