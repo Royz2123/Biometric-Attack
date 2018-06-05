@@ -106,15 +106,26 @@ class Attacker(object):
             for match in all_matches:
                 freqs[match] += 1
 
+            distrib = {}
+            for face_index, freq in enumerate(freqs):
+                #print((freq, face_index))
+                if freq not in distrib.keys():
+                    distrib[freq] = []
+                distrib[freq].append(face_index)
+
             f.write(
                 """
                 Total hits:\t%s
                 Random seed:\t%s\n
-                Frequencies:\t%s\n
+                Distribution:\n\t\t\t\t\t\t\t\t\t%s\n
                 """ % (
                     len(all_matches),
                     self._seed_file,
-                    freqs,
+                    "\n\t\t\t\t\t\t\t\t\t".join([
+                        "%d Hits\t# of faces:%d\tFace indexes: %s" %
+                        (hits, len(indexes), indexes)
+                        for hits, indexes in distrib.items()
+                    ]),
                 )
             )
 
