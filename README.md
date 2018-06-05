@@ -43,9 +43,39 @@ You will need to download the DLib library (links coming soon). Our code has bee
 Run the following code from the terminal. A bash file has also been added:
 
 
+### Running examples
+
+Note: All examples assume that the setup has been set with a virtual enviroment as described in "prerequsites". If you have obtained Dlib in some other way, or perhaps are just running from the default csv files provided, remove the "workon" and "deactivate" lines from the bash examples.
+
+#### Example 1 - default run
+
+Running the code with all the default parameters is done in the following way,
 
 ```bash
 workon facecourse-py3
 python3 attack_database.py
+deactivate
+```
+
+
+#### Example 2 - specifying an attack size
+
+```bash
+workon facecourse-py3
+python3 attack_database.py --attack-size 1000000
+deactivate
+```
+
+
+#### Example 3 - using an existing seed, from a previous run
+
+We make recovering a previous run super simple. Find the run that you wish to obtain it's random seed, and copy its recovery time (Either copy from filename or take first field of log file)
+
+
+For Example, for the timestamp "05:06:2018_17:12:09", the code can be run as such:
+
+```bash
+workon facecourse-py3
+python3 attack_database.py --recover-time 05:06:2018_17:12:09
 deactivate
 ```

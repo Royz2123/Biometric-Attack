@@ -18,7 +18,7 @@ def parse_args():
                        help='training csv of face features')
     parser.add_argument('--testing-csv', default=constants.DEFAULT_TESTING_CSV_NAME,
                        help='testing csv of face features')
-    parser.add_argument('--attack_size', default=constants.DEFAULT_ATTACK_SIZE,
+    parser.add_argument('--attack-size', default=constants.DEFAULT_ATTACK_SIZE, type=int,
                        help='number of faces to be generated')
     parser.add_argument('--recover-time', default=None, type=str,
                        help='recover from previous run')
