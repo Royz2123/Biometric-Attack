@@ -23,8 +23,7 @@ class Attacker(object):
         training_db,
         testing_db,
         attack_size=constants.DEFAULT_ATTACK_SIZE,
-        logfile=LOG_FILE,
-        seed_file=SEED_FILE
+        recover_time=None
     ):
         self._training_db = training_db
         self._testing_db = testing_db
@@ -32,15 +31,34 @@ class Attacker(object):
         self._attack_size = attack_size
 
         # create log file
-        start_time = time.strftime('%d:%m:%Y_%H:%M:%S')
-        self._log_file = logfile + "_" + start_time
-        self._seed_file = seed_file + "_" + start_time
+        self._timestamp = time.strftime('%d:%m:%Y_%H:%M:%S')
+        self._log_file = Attacker.LOG_FILE + "_" + self._timestamp
+        self._seed_file = Attacker.SEED_FILE + "_" + self._timestamp
+
+        # load random state if requested
+        if recover_time is not None:
+            self.load_state(Attacker.SEED_FILE + "_" + recover_time)
+
+
+    def save_state(self):
+        with open(self._seed_file, "w+") as f:
+            rand_state = list(np.random.get_state())
+            # handle annoying numpy array
+            rand_state[1] = rand_state[1].tolist()
+            f.write(str(tuple(rand_state)))
+
+
+    def load_state(self, filename):
+        with open(filename, "r+") as f:
+            rand_state = list(eval(f.read()))
+            # handle annoying numpy array
+            rand_state[1] = np.array(rand_state[1])
+            np.random.set_state(tuple(rand_state))
 
     # attack the database for self._attacks
     def attack(self, debug_level=PLOT_END_LEVEL):
         # First save the random seed
-        with open(self._seed_file, "w+") as f:
-            f.write(str(np.random.get_state()))
+        self.save_state()
 
         with open(self._log_file, "w+") as f:
             if debug_level:
@@ -48,10 +66,12 @@ class Attacker(object):
             f.write(
                 """
                 \n~~~~Attack Log~~~~\n
+                Timestamp:\t%s
                 Training database:\t%s
                 Testing database:\t%s
                 Attack size:\t%d\n
                 """ % (
+                    self._timestamp,
                     self._training_db,
                     self._testing_db,
                     self._attack_size
