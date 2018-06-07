@@ -36,11 +36,7 @@ Another interesting phenomenon is the rise in hits as a factor of the threshhold
 
 ### Prerequisites
 
-You will need to download the DLib library (links coming soon). Our code has been fitted to work on a virtualenv, on Ubuntu 16.04.
-
-### Running the attack
-
-Run the following code from the terminal. A bash file has also been added:
+You will need to download the DLib library. We chose to install Dlib using a virtual enviroment, fro reference https://www.learnopencv.com/install-dlib-on-ubuntu/. Our code has been fitted to work on a virtualenv, on Ubuntu 16.04.
 
 
 ### Running examples
@@ -49,13 +45,15 @@ Note: All examples assume that the setup has been set with a virtual enviroment 
 
 #### Example 1 - default run
 
-Running the code with all the default parameters is done in the following way,
+Running the code with all the default parameters is done in the following way:
 
 ```bash
 workon facecourse-py3
 python3 attack_database.py
 deactivate
 ```
+
+Note that this examples has been provided as a bash file (run.sh):
 
 
 #### Example 2 - specifying an attack size
