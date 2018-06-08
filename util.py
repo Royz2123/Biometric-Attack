@@ -1,8 +1,10 @@
 # import cv2
 from skimage import io
+from skimage.transform import resize
 import matplotlib.pyplot as plt
 import numpy as np
 
+import constants
 # def read_image(filename):
 #    return cv2.imread(filename)
 
@@ -12,7 +14,9 @@ def readable_image(filename):
     return "JPG" in filename.upper() and ("IMG" in filename.upper() or "RON" in filename.upper())
 
 def read_image(filename):
-    return io.imread(filename)
+    im = io.imread(filename)
+    im_resized = resize(im, constants.DEFAULT_IMAGE_SIZE)
+    return im_resized
 
 def plot_points(x_values, y_values, x_name="", y_name=""):
     plt.scatter(x_values, y_values)

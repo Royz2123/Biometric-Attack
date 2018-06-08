@@ -160,3 +160,18 @@ class FaceTransformation(object):
             print(face_descriptor)
 
         return np.array(face_descriptor)
+
+    def crop_face(self, img):
+        """
+        # find the bounding boxes of each face (if exists)
+        bounding_boxes = self._detector(img, 1)
+        if not len(bounding_boxes):
+            return None
+
+        # Process the first face
+        shape = self._sp(img, bounding_boxes[0])
+
+        print(shape)
+        """
+
+        return img

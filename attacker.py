@@ -1,6 +1,7 @@
 import numpy as np
 import time
 from functools import reduce
+import matplotlib.pyplot as plt
 
 import constants
 import csv_database
@@ -11,8 +12,9 @@ import util
     NO_DEBUG,
     DEBUG_LEVEL,
     PLOT_END_LEVEL,
+    PLOT_VIZ_LEVEL,
     PLOT_ALL_LEVEL,
-)=range(4)
+)=range(5)
 
 class Attacker(object):
     LOG_FILE = "logs/general/attack_log"
@@ -56,7 +58,7 @@ class Attacker(object):
             np.random.set_state(tuple(rand_state))
 
     # attack the database for self._attacks
-    def attack(self, debug_level=PLOT_END_LEVEL):
+    def attack(self, debug_level=PLOT_VIZ_LEVEL):
         # First save the random seed
         self.save_state()
 
@@ -90,6 +92,11 @@ class Attacker(object):
                 # document if there were matches
                 if debug_level == PLOT_ALL_LEVEL:
                     util.plot_points(range(len(all_matches)), all_matches, x_name="Attack number", y_name="Hits")
+                elif debug_level == PLOT_VIZ_LEVEL:
+                    for gen_features in faces:
+                        gen_face_im = self._training_db.approx_by_faces(gen_features)
+                        plt.imshow(gen_face_im)
+                        plt.show()
                 elif debug_level in (DEBUG_LEVEL, PLOT_END_LEVEL):
                     print(
                         "Batch #%d / %d\nFaces Generated:%d\nTotal matches: %d\n"

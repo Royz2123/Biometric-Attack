@@ -1,6 +1,9 @@
+from functools import reduce
 import numpy as np
 import os
+import scipy
 import time
+import matplotlib as plt
 
 import constants
 import face
@@ -38,7 +41,6 @@ class CSVDatabase(object):
 
         # set the transform PCA and such
         self._analyzer.set_transform(self.get_face_mat())
-        #self.project_faces()
 
     def __str__(self):
         return "Faces folder:\t%s\tFeature csv file:\t%s\t" % (
@@ -116,3 +118,35 @@ class CSVDatabase(object):
 
     def generate_faces(self, batch_size=constants.DEFAULT_ATTACK_SIZE):
         return self._analyzer.generate_faces(batch_size)
+
+    # Experimental function, that tries to approximate a
+    # face by averaging the nearest faces to it
+    def approx_by_faces(self, new_face):
+        # add distance from face to each face
+        new_data = [(face, face.distance(new_face)) for face in self._data]
+
+        # then sort database vectors by distance from new_face
+        sorted_data = sorted(new_data, key=lambda x: x[1])
+        enclosing_faces = sorted_data[:constants.FACES_FOR_APPROX]
+
+        # get sum of lengths for normalization
+        total_lens = sum([face[1] for face in enclosing_faces])
+
+        # create an averaged face from pictures
+        average_face = None
+        for face, dist in enclosing_faces:
+            # compute face weight in average
+            alpha = dist / total_lens
+            
+
+            # add to average face
+            face_img = util.read_image(face._filename)
+            face_img = self._analyzer.crop_face(face_img)
+
+            if average_face is None:
+                average_face = alpha * face_img
+            else:
+                average_face += alpha * face_img
+
+        # output the average face
+        return average_face
