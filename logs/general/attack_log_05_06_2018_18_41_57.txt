@@ -1,0 +1,36 @@
+
+                
+~~~~Attack Log~~~~
+
+                Timestamp:	05:06:2018_18:41:57
+                Training database:	Faces folder:	faces/train/	Feature csv file:	databases/train.csv	
+                Testing database:	Faces folder:	faces/test/	Feature csv file:	databases/test.csv	
+                Attack size:	50000000
+
+                
+                Total hits:	417
+                Random seed:	logs/seeds/seed_file_05:06:2018_18:41:57
+
+                Distribution:
+									0 Hits	# of faces:155	Face indexes: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 15, 16, 17, 22, 23, 25, 26, 27, 28, 29, 30, 31, 35, 36, 39, 41, 42, 43, 44, 46, 47, 48, 49, 50, 52, 55, 56, 57, 58, 59, 61, 62, 63, 64, 65, 66, 67, 69, 72, 73, 75, 76, 78, 82, 85, 86, 87, 88, 89, 91, 92, 94, 95, 97, 99, 100, 101, 102, 103, 105, 106, 107, 109, 110, 111, 112, 113, 116, 117, 119, 121, 124, 125, 126, 127, 128, 132, 134, 136, 137, 139, 140, 141, 142, 143, 144, 146, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 163, 164, 166, 167, 169, 172, 174, 175, 176, 177, 178, 181, 182, 184, 185, 187, 189, 190, 191, 192, 195, 199, 200, 201, 202, 203, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 221, 222, 223, 225, 226, 227]
+									1 Hits	# of faces:30	Face indexes: [0, 14, 18, 20, 24, 32, 33, 34, 40, 54, 70, 71, 77, 81, 93, 98, 115, 118, 120, 129, 130, 135, 147, 159, 171, 179, 186, 194, 197, 204]
+									2 Hits	# of faces:11	Face indexes: [6, 60, 79, 80, 84, 131, 138, 170, 173, 218, 219]
+									3 Hits	# of faces:5	Face indexes: [37, 83, 133, 161, 188]
+									4 Hits	# of faces:4	Face indexes: [38, 96, 114, 145]
+									5 Hits	# of faces:2	Face indexes: [19, 45]
+									6 Hits	# of faces:1	Face indexes: [90]
+									7 Hits	# of faces:2	Face indexes: [122, 165]
+									8 Hits	# of faces:3	Face indexes: [108, 168, 193]
+									9 Hits	# of faces:1	Face indexes: [224]
+									10 Hits	# of faces:4	Face indexes: [74, 123, 160, 198]
+									11 Hits	# of faces:1	Face indexes: [220]
+									12 Hits	# of faces:1	Face indexes: [183]
+									13 Hits	# of faces:2	Face indexes: [53, 68]
+									16 Hits	# of faces:1	Face indexes: [180]
+									17 Hits	# of faces:1	Face indexes: [104]
+									18 Hits	# of faces:1	Face indexes: [51]
+									56 Hits	# of faces:1	Face indexes: [21]
+									33 Hits	# of faces:1	Face indexes: [196]
+									42 Hits	# of faces:1	Face indexes: [162]
+
+                

@@ -33,7 +33,7 @@ class Attacker(object):
         self._attack_size = attack_size
 
         # create log file
-        self._timestamp = time.strftime('%d:%m:%Y_%H:%M:%S')
+        self._timestamp = time.strftime('%d_%m_%Y_%H_%M_%S')
         self._log_file = Attacker.LOG_FILE + "_" + self._timestamp
         self._seed_file = Attacker.SEED_FILE + "_" + self._timestamp
 
