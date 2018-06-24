@@ -89,14 +89,20 @@ class Attacker(object):
                 matched_faces = self._testing_db.check_for_matches(faces)
                 all_matches += reduce(lambda x, y: x + y, matched_faces)
 
+                # plot average faces
+                if debug_level == PLOT_VIZ_LEVEL:
+                    ax1 = plt.subplot(1,1,1)
+                    im1 = ax1.imshow(self._training_db.approx_by_faces(faces[0]))
+
+                    # add generated faces to output video
+                    for gen_features in faces[1:]:
+                        im1.set_data(self._training_db.approx_by_faces(gen_features))
+                        plt.pause(0.01)
+
+                    plt.ioff()
                 # document if there were matches
-                if debug_level == PLOT_ALL_LEVEL:
+                elif debug_level == PLOT_ALL_LEVEL:
                     util.plot_points(range(len(all_matches)), all_matches, x_name="Attack number", y_name="Hits")
-                elif debug_level == PLOT_VIZ_LEVEL:
-                    for gen_features in faces:
-                        gen_face_im = self._training_db.approx_by_faces(gen_features)
-                        plt.imshow(gen_face_im)
-                        plt.show()
                 elif debug_level in (DEBUG_LEVEL, PLOT_END_LEVEL):
                     print(
                         "Batch #%d / %d\nFaces Generated:%d\nTotal matches: %d\n"

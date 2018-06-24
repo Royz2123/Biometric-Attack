@@ -42,6 +42,9 @@ class CSVDatabase(object):
         # set the transform PCA and such
         self._analyzer.set_transform(self.get_face_mat())
 
+        # fast lookup dictionary for faces
+        self._fast_lookup = {}
+
     def __str__(self):
         return "Faces folder:\t%s\tFeature csv file:\t%s\t" % (
             self._face_dir,
@@ -138,10 +141,14 @@ class CSVDatabase(object):
             # compute face weight in average
             alpha = dist / total_lens
 
-            # add to average face
-            face_img = util.read_image(face._filename)
-            face_img = self._analyzer.crop_face(face_img)
+            # read face
+            if face._filename not in self._fast_lookup.keys():
+                face_img = util.read_image(face._filename)
+                face_img = self._analyzer.crop_face(face_img)
+                self._fast_lookup[face._filename] = face_img
+            face_img = self._fast_lookup[face._filename]
 
+            # add to average face
             if average_face is None:
                 average_face = alpha * face_img
             else:
