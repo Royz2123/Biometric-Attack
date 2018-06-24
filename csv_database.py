@@ -137,7 +137,6 @@ class CSVDatabase(object):
         for face, dist in enclosing_faces:
             # compute face weight in average
             alpha = dist / total_lens
-            
 
             # add to average face
             face_img = util.read_image(face._filename)
